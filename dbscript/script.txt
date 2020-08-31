@@ -1,0 +1,44 @@
+-- 創建資料庫
+DROP DATABASE IF EXISTS RD5;
+CREATE DATABASE IF NOT EXISTS RD5;
+USE RD5;
+
+-- 創建帳戶資料表
+CREATE TABLE Accounts (
+    accountId char(30) primary key,
+    password char(64) NOT NULL,
+    name varchar(30) NOT NULL,
+    holder varchar(30) NOT NULL,
+    balanceHide boolean default false,
+    balance decimal( 18, 3 ) default 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- 創建動作資料表
+CREATE TABLE Actions (
+    aid int primary key auto_increment,
+    action varchar(20) not null
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 創建交易資料表
+CREATE TABLE Transactions (
+    transId int primary key auto_increment,
+    accountId char(30) not null,
+    aid int not null,
+    value decimal( 18, 3 ) default 0,
+    residue decimal( 18, 3 ) default 0,
+    success boolean default true,
+    date datetime not null,
+    CONSTRAINT fk_Account_Id FOREIGN KEY (accountId) REFERENCES Accounts(accountId) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_Action_Id FOREIGN KEY (aid) REFERENCES Actions(aid) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 創建錯誤資料表
+CREATE TABLE Errors (
+    errorId int primary key auto_increment,
+    transId int not null,
+    errorMsg varchar(80),
+    CONSTRAINT fk_Transaction_Id FOREIGN KEY (transId) REFERENCES Transactions(transId) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO Actions ( action ) values( 'deposit'),('withdraw' );
