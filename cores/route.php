@@ -14,14 +14,14 @@ class Route {
     }
 
     public function hasNextPath() {
-        if( count($this->url) != 0 ) {
+        if( $this->pointer >= 0&& $this->pointer < count($this->url) ) {
             return true;
         }
         return false;
     }
 
     public function getNextPath() {
-        if( $this->pointer < count($this->url) && $this->pointer >= 0 ) {
+        if( $this->hasNextPath() ) {
             return $this->url[$this->pointer++];
         }
         return null;
@@ -55,7 +55,7 @@ class Route {
     }
 
     public function getParam() {
-        if( $this->pointer < count($this->url) && $this->pointer >= 0 ) {
+        if( $this->hasNextPath() ) {
             return array_slice($this->url, $this->pointer);
         } else {
             return [];
