@@ -36,11 +36,19 @@ class DashboardController extends Controller {
                 //echo $_SESSION["loginToken"];
                 $this->changePassword();
                 break;
+            case "action":
+                if( !isset($_SESSION["loginToken"]) || $route->hasNextPath() ) {
+                    header( "HTTP/1.1 404 Not Found" );
+                    exit;
+                }
+                $this->action();
+                break;
             case null:
                 if( !isset($_SESSION["loginToken"])) {
                     header( "Location: ./home" );
                     exit;
                 }
+                header("X-Frame-Options: SAMEORIGIN");
                 $this->page();
                 break;
             default:
@@ -75,11 +83,15 @@ class DashboardController extends Controller {
                 $this->view("panel/accountInfo", $data);
                 break;
             case "withdraw":
-                $data = [ "actionName" => "提款" ];
+                $data = [ "action" => "withdraw", 
+                        "actionName" => "提款",
+                        "script" => ["views/script/action.js"] ];
                 $this->view("panel/actionForm", $data);
                 break;
             case "deposit":
-                $data = [ "actionName" => "存款" ];
+                $data = ["action" => "deposit", 
+                        "actionName" => "存款",
+                        "script" => ["views/script/action.js"] ];
                 $this->view("panel/actionForm", $data);
                 break;
             case "validate":
@@ -151,14 +163,14 @@ class DashboardController extends Controller {
                     $result["what"] = "帳戶密碼";
                     $result["where"] = "changePassword";
                     $result["success"] = "成功";
-                    $result["script"] = ["views/script/changeResult.js"];
+                    $result["script"] = ["views/script/continue.js"];
                     $this->view("panel/changeResult", $result);
                 } else {
                     $result["what"] = "帳戶密碼";
                     $result["where"] = "changePassword";
                     $result["success"] = "失敗";
                     $result["msg"] = ["系統發生錯誤"];
-                    $result["script"] = ["views/script/changeResult.js"];
+                    $result["script"] = ["views/script/continue.js"];
                     $this->view("panel/changeResult", $result);
                 }
             } else {
@@ -218,6 +230,123 @@ class DashboardController extends Controller {
         } else {
             $result["script"] = ["views/script/validate.js"];
             $this->view("panel/validateForm", $result);   
+        }
+    }
+
+    public function action() {
+        $result = [];
+        if( $_POST["value"] == "") {
+            $result["valueInvalid"] = "is-invalid";
+            $result["valueFeedback"] = "此欄位不可留空";
+        } else {
+            $pattern = '/^\d{1,18}(\.\d{1,3})?$/';
+            if( !preg_match( $pattern, $_POST["value"]) ) {
+                $result["valueInvalid"] = "is-invalid";
+                $result["valueFeedback"] = "必須是整數或浮點數，容許小數點後3位";
+            }
+        }
+
+        if( $_POST["actionPassword"] == "") {
+            $result["actionPassword"] = "is-invalid";
+            $result["actionPasswordFeedback"] = "此欄位不可留空";
+        }
+
+        if( $_POST["actionCheckPassword"] == "") {
+            $result["actionCheckPassword"] = "is-invalid";
+            $result["actionCheckPasswordFeedback"] = "此欄位不可留空";
+        } else if( $_POST["actionPassword"] !== $_POST["actionCheckPassword"] ) {
+            $result["actionCheckPassword"] = "is-invalid";
+            $result["actionCheckPasswordFeedback"] = "必須上欄網銀密碼相同";
+        }
+
+        if( count($result) == 0 ) {
+            $result["value"] = $_POST["value"];
+            $result["action"] = $_POST["action"];
+
+            $account = $this->model("Account");
+            $success = $account->load(["password"], $_SESSION["loginToken"]);
+            if( $success ) {
+                if( hash( "sha256",$_POST["actionPassword"]) == $account->password ) {  
+                    $transaction = $this->model("Transaction");
+                    $error = $this->model("TransactionError");
+
+                    $account->load(["balance","name"], $_SESSION["loginToken"]);
+                    
+                    if( $_POST["action"] == "deposit" ) {
+                        $actionCode = 1;
+                    } else {
+                        $actionCode = 2;
+                    }
+                    $value = (float)$_POST["value"];
+                    $currentTime = date("Y-m-d H:i:s", mktime(gmdate("H")+8, gmdate("i"), gmdate("s"), gmdate("m"), gmdate("d"), gmdate("Y")) );
+
+                    $success = $account->balanceOperation( $actionCode, $value);
+                    $transaction->create([
+                                        "accountId" => $account->accountId,
+                                        "aid" => $actionCode,
+                                        "value" => $value,
+                                        "residue" => $account->balance,
+                                        "success" => ( $success == "success") ? 1:0,
+                                        "date" => $currentTime ] );
+                    $transaction->loadLast(["value","residue","success","date"]);
+                    if( $success != "success" ) {
+                        $error->create([
+                            "transId" => $transaction->transId,
+                            "errorMsg" => $success
+                        ]);
+                    }
+
+                    $detail = [];
+                    $detail["action"] = $_POST["action"];
+                    $detail["actionName"] = ($_POST["action"]=="withdraw")?"提款":"存款";
+                    $detail["accountName"] = $account->name;
+                    $detail["transId"] = sprintf("%10d", $transaction->transId );
+                    $detail["date"] = $transaction->date;
+                    $detail["value"] = $transaction->value;
+                    $detail["residue"] = $transaction->residue;
+                    $detail["status"] = ($transaction->success)?"成功":"失敗";
+                    $detail["success"] = $transaction->success;
+                    $detail["errorMsg"] = $success;
+                    $detail["script"] = ["views/script/continue.js"];
+                    $this->view("panel/transactionDetail", $detail );
+                } else {
+                    
+                    if( $_POST["action"] == "withdraw" ) {
+                        $result["actionName"] = "提款";
+                    } else {
+                        $result["actionName"] = "存款";
+                    }
+
+                    $result["actionCheckPassword"] = "is-invalid";
+                    $result["actionCheckPasswordFeedback"] = "輸入密碼錯誤";
+                    $result["script"] = ["views/script/action.js"];
+                    $this->view("panel/actionForm", $result);
+                }
+            } else {
+
+                if( $_POST["action"] == "withdraw" ) {
+                    $result["actionName"] = "提款";
+                } else {
+                    $result["actionName"] = "存款";
+                }
+
+                $result["actionCheckPassword"] = "is-invalid";
+                $result["actionCheckPasswordFeedback"] = "系統發生錯誤";
+                $result["script"] = ["views/script/action.js"];
+                $this->view("panel/actionForm", $result);
+            }
+        } else {
+            $result["value"] = $_POST["value"];
+            $result["action"] = $_POST["action"];
+
+            if( $_POST["action"] == "withdraw" ) {
+                $result["actionName"] = "提款";
+            } else {
+                $result["actionName"] = "存款";
+            }
+
+            $result["script"] = ["views/script/action.js"];
+            $this->view("panel/actionForm", $result);   
         }
     }
 }

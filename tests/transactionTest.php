@@ -11,11 +11,17 @@ $transaction = new Transaction;
 //                 "success" => 1,
 //                 "date" => "2020-08-31 05:35:00" ]);
 
-$transaction->load(["accountId", "aid", "value"], 1);
-echo "<br>";
+// $transaction->load(["accountId", "aid", "value"], 1);
+// echo "<br>";
+// echo $transaction->transId."<br>";
+// echo $transaction->aid."<br>";
+// echo $transaction->value."<br>";
+
+// $transaction->value = 5000;
+// $transaction->save(["value"]);
+
+$transaction->loadLast( ["accountId", "aid", "value", "date"]);
 echo $transaction->transId."<br>";
 echo $transaction->aid."<br>";
 echo $transaction->value."<br>";
-
-$transaction->value = 5000;
-$transaction->save(["value"]);
+echo $transaction->date."<br>";

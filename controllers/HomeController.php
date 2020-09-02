@@ -22,6 +22,7 @@ class HomeController extends Controller {
                 $this->signup();
                 break;
             case null:
+                header("X-Frame-Options: SAMEORIGIN");
                 $this->page();
                 break;
             default:

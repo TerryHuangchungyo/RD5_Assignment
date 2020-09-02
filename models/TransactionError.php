@@ -1,11 +1,11 @@
 <?php
-class Error extends Model{
+class TransactionError extends Model{
     public function getDatabase() {
         return Database::getDatabase();
     }
 
     public function getTbName() {
-        return DB::accountTbName;
+        return DB::errorTbName;
     }
 
     public function getPidName() {

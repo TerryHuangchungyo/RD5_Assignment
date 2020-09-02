@@ -32,7 +32,6 @@ abstract class Model {
         } else {
             $this->isLoad = false;
         }
-        var_dump($stmt->errorInfo());
         return $this->isLoad;
     }
 
@@ -89,7 +88,6 @@ abstract class Model {
                 $stmt->execute($params);
                 return true;
             } catch( Exception $e ) {
-                echo $e->getMessage();
                 return false;
             }
         }

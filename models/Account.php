@@ -131,9 +131,11 @@ class Account {
                 $stmt->bindParam( ":balance", $balance );
                 $stmt->bindParam( ":accountId", $accountId );
                 $stmt->execute();
+                $this->balance = $balance;
                 $dblink->commit();
                 return "success";
             } catch ( Exception $e ) {
+                $this->balance =$pastBalance;
                 $dblink->rollBack();
                 return $e->getMessage();
             }
