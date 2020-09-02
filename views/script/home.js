@@ -24,6 +24,7 @@ $(document).ready(function(){
             loginResult = response;
             console.log(loginResult);
             if( loginResult["success"] ) {
+                $("#loginModal").modal("hide");
                 window.location = "dashboard";
             } else {
                 delete loginResult["success"];

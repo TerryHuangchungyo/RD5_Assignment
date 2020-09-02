@@ -3,8 +3,8 @@ class AccountController extends Controller {
     public function __construct( $route ) {
         switch( $_SERVER["REQUEST_METHOD"] ) {
             case "GET":
-                if( count($route->getParam()) == 1 ) {
-                    $this->getAPI($route->getParam()[0] ); 
+                if( isset( $_SESSION["loginToken"]) ) {
+                    $this->getAPI($_SESSION["loginToken"] ); 
                 } else {
                     header( "HTTP/1.1 404 Not Found" );
                     exit;

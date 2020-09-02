@@ -2,9 +2,9 @@
 class DB
 {
     const dbuser = "root";
-    const dbpass = "";
+    const dbpass = "root";
     const dbhost = "localhost";
-    const dbport = "3306";
+    const dbport = "8809";
     const dbname = "RD5";
     const accountTbName = "Accounts";
     const transactionTbName = "Transactions";
@@ -12,3 +12,7 @@ class DB
     const actionTbName = "Actions";
 }
 
+class Web
+{
+    const root = "/RD5_Assignment/";
+}
