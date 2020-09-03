@@ -36,7 +36,7 @@ $(document).ready(function(){
     
     $("#transaction-tab").click(function(){
         $.ajax({
-            url: "dashboard/panel/transaction",
+            url: "dashboard/panel/validate",
             method: "GET"
         }).then(function( result ){
             lastSeleted.html("");

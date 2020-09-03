@@ -40,7 +40,10 @@ class Transaction extends Model{
         $tbName = $this->getTbName();
         $pidName = $this->getPidName();
 
-        $stmt = $dblink->prepare( "SELECT * FROM $tbName WHERE accountId = :accountId ORDER BY date DESC limit :offsets, :limits");
+        $stmt = $dblink->prepare( "SELECT t.transId, a.name, aid, value, residue, success, date, e.errorMsg 
+                                FROM transactions t LEFT JOIN  errors e ON t.transId = e.transId 
+                                JOIN accounts a ON a.accountId = t.accountId 
+                                WHERE t.accountId = :accountId ORDER BY date DESC limit :offsets, :limits");
         $stmt->bindParam( ":accountId", $accountId );
         $stmt->bindParam( ":offsets", $offsets, PDO::PARAM_INT);
         $stmt->bindParam( ":limits", $limits, PDO::PARAM_INT);

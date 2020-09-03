@@ -13,10 +13,6 @@ CREATE TABLE Accounts (
     balance decimal( 18, 3 ) default 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO Accounts( accountId, password, name, holder, balance ) VALUES
-( 'terry', '12345', '16888', 'terry_huang', 2000 ),
-( 'mary', '12345', 'I want money', 'mary_wang', 1000 );
-
 -- 創建動作資料表
 CREATE TABLE Actions (
     aid int primary key auto_increment,
@@ -37,10 +33,6 @@ CREATE TABLE Transactions (
     CONSTRAINT fk_Account_Id FOREIGN KEY (accountId) REFERENCES Accounts(accountId) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_Action_Id FOREIGN KEY (aid) REFERENCES Actions(aid) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-INSERT INTO Transactions( accountId, aid, value, residue, success, date ) VALUES
-    ( 'terry', 1, 2000, 2000, true, "2020-09-01 09:46:35" ),
-    ( 'mary', 2, 3000, 1000, true, "2020-09-01 09:49:35" );
 
 -- 創建錯誤資料表
 CREATE TABLE Errors (

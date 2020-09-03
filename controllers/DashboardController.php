@@ -107,14 +107,16 @@ class DashboardController extends Controller {
                 $this->view("panel/validateForm", $data);
                 break;
             case "transaction":
-                //if( isset($_SESSION["validated"]) ) {
-                    $data["script"] = ["views/script/transactionTable.js"];
+                if( isset($_SESSION["validated"]) ) {
+                    $data["script"] = [
+                        "views/script/simple-bootstrap-paginator-master/simple-bootstrap-paginator.min.js"
+                        ,"views/script/transactionTable.js"];
                     $this->view("panel/transactionTable", $data);
-                //     unset($_SESSION["validated"]);
-                // } else {
-                //     header( "HTTP/1.1 404 Not Found" );
-                //     exit;
-                // }
+                    unset($_SESSION["validated"]);
+                } else {
+                    header( "HTTP/1.1 404 Not Found" );
+                    exit;
+                }
                 break;
             case "changePassword":
                 $data = [];
@@ -263,8 +265,10 @@ class DashboardController extends Controller {
                             $this->view("panel/settingForm", $data);
                             break;
                         case "transaction":
-                            $data["script"] = ["views/script/transactionTable.js"];
-                            $this->view("panel/transactionTable", Array());
+                            $data["script"] = [
+                                "views/script/simple-bootstrap-paginator-master/simple-bootstrap-paginator.min.js"
+                                ,"views/script/transactionTable.js"];
+                            $this->view("panel/transactionTable", $data);
                             break;
                     }
                 } else {
