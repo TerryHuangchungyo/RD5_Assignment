@@ -82,10 +82,12 @@ class DashboardController extends Controller {
         switch( $panelName ) {
             case "info":
                 $model = $this->model("Account");
-                $model->load(["name", "holder", "balance"],$_SESSION["loginToken"]);
+                $model->load(["name", "holder", "balance", "balanceHide"],$_SESSION["loginToken"]);
                 $data = [ "accountName" => $model->name,
                         "accountHolder" => $model->holder,
-                        "accountBalance" => $model->balance ];
+                        "accountBalance" => $model->balance,
+                        "balanceHide" => $model->balanceHide,
+                        "script" => ["views/script/accountInfo.js"] ];
                 $this->view("panel/accountInfo", $data);
                 break;
             case "withdraw":
@@ -192,6 +194,39 @@ class DashboardController extends Controller {
             $result["script"] = ["views/script/changePassword.js"];
             $this->view("panel/changePasswordForm", $result);   
         }
+    }
+
+    public function info() {
+        $result = [];
+        if( $_POST["validatePassword"] == "") {
+            $result["validatePassword"] = "此欄位不可留空";
+        }
+
+        if( $_POST["validateCheckPassword"] == "") {
+            $result["validateCheckPassword"] = "此欄位不可留空";
+        } else if( $_POST["validatePassword"] !== $_POST["validateCheckPassword"] ) {
+            $result["validateCheckPassword"] = "必須上欄網銀密碼相同";
+        }
+
+        if( count($result) == 0 ) {
+            $result["success"] = false;
+            $account = $this->model("Account");
+            $success = $account->load(["balance","password"], $_SESSION["loginToken"]);
+            if( $success ) {
+                if( hash( "sha256",$_POST["validateCheckPassword"]) == $account->password ) {
+                    $result["success"] = true;
+                    $balance = $account->balance;
+                    $result["content"] = "$     ".$balance;
+                } else {
+                    $result["validateCheckPassword"] = "輸入密碼錯誤";
+                }
+            } else {
+                $result["validateCheckPassword"] = "系統發生錯誤";
+            }
+        } else {
+            $result["success"] = false;
+        }
+        $this->view( "api/JsonAPI", $result );
     }
 
     public function validate() {

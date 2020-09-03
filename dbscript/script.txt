@@ -51,3 +51,6 @@ CREATE TABLE Errors (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Access MAMP Mysql /Applications/MAMP/Library/bin/mysql
+
+-- SELECT COUNT(transId) FROM `Transactions` WHERE accountId="kim";
+-- SELECT * FROM `Transactions` WHERE accountId="kim" ORDER BY date DESC limit 0,3

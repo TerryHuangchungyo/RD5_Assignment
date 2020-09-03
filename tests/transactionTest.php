@@ -20,8 +20,11 @@ $transaction = new Transaction;
 // $transaction->value = 5000;
 // $transaction->save(["value"]);
 
-$transaction->loadLast( ["accountId", "aid", "value", "date"]);
-echo $transaction->transId."<br>";
-echo $transaction->aid."<br>";
-echo $transaction->value."<br>";
-echo $transaction->date."<br>";
+// $transaction->loadLast( ["accountId", "aid", "value", "date"]);
+// echo $transaction->transId."<br>";
+// echo $transaction->aid."<br>";
+// echo $transaction->value."<br>";
+// echo $transaction->date."<br>";
+
+echo $transaction->getCountsByAccountId("kim")."<br>";
+var_dump( $transaction->getTransactionsByAccountId("kim",0, 10));

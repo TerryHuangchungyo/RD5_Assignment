@@ -1,4 +1,4 @@
-<div class="container mt-3">
+<div id="info" class="container mt-3">
     <h4 class="pl-2 text-secondary">帳戶資訊</h4>
     <div class="card mt-3">
         <div class="card-header">
@@ -6,7 +6,55 @@
         </div>
         <div class="card-body">
         <h5>帳戶名稱: <?=$data["accountName"]?></h5>
-        <h5>帳戶餘額: $   <?=$data["accountBalance"]?></h5>
+        <?php if( $data["balanceHide"]): ?>
+            <h5>帳戶餘額: <span id="residueContent">*****</span><svg id="eyeShowBtn" data-action="show" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-eye-fill ml-2" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+            <path fill-rule="evenodd" d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+            </svg>
+            <svg id="eyeCloseBtn" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-eye-slash-fill ml-2" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10.79 12.912l-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"/>
+            <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708l-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829z"/>
+            <path fill-rule="evenodd" d="M13.646 14.354l-12-12 .708-.708 12 12-.708.708z"/>
+            </svg></h5>
+        <?php else: ?>
+            <h5>帳戶餘額: $     <?=$data["accountBalance"]?></h5>
+        <?php endif; ?>
         </div>
     </div>
 </div>
+<?php if($data["balanceHide"]): ?>
+    <div id="validateForm" class="container my-3">
+        <h4 class="text-secondary">驗證</h4>
+        <div class="row mb-3">
+            <div class="col-3">
+                <h5 class="pt-2">密碼:</h5>
+            </div>
+            <div class="col-7 form-group">
+                <input type="password" class="form-control" id="validatePasswordInput" placeholder="請輸入網銀密碼">
+                <div id="validatePasswordFeedback" class="invalid-feedback"></div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-3">
+                <h5 class="pt-2">密碼確認:</h5>
+            </div>
+            <div class="col-7 form-group">
+                <input type="password" class="form-control" id="validateCheckPasswordInput" placeholder="請再次輸入網銀密碼">
+                <div id="validateCheckPasswordFeedback" class="invalid-feedback"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="offset-8 col-4">
+                <button type="button" id="validateSubmit" class="btn btn-success">提交</button>
+                <button type="button" id="validateCancel" class="btn btn-secondary">取消</button>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+<?php if( $data["balanceHide"]): ?>
+    <?php if(isset($data["script"])):?>
+        <?php foreach( $data["script"] as $script ):?>
+            <script src="<?=$script?>"></script>
+        <?php endforeach; ?>
+    <?php endif;?>
+<?php endif; ?>

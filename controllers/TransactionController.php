@@ -1,5 +1,5 @@
 <?php
-class AccountController extends Controller {
+class TransactionController extends Controller {
     public function __construct( $route ) {
         switch( $_SERVER["REQUEST_METHOD"] ) {
             case "GET":
@@ -10,8 +10,6 @@ class AccountController extends Controller {
                     exit;
                 }
                 break;
-            case "POST":
-
         }
     }
 

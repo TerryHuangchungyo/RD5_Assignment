@@ -8,10 +8,10 @@
             <h5>交易日期: <?=$data["date"]?></h5>
         </div>
         <div class="my-3 ml-2">
-            <h5>交易類型: <?=$data["actionName"]?></h5>
+            <h5>交易類型: <span class="<?=$data["actionName"]=="存款"?"text-success":"text-danger"?>"><?=$data["actionName"]?></span></h5>
         </div>
         <div class="my-3 ml-2">
-            <h5>交易狀態: <?=$data["status"]?></h5>
+            <h5>交易狀態: <span class="<?=$data["status"]=="成功"?"text-success":"text-danger"?>"><?=$data["status"]?></span></h5>
         </div>
         <div class="my-3 ml-2">
             <h5>交易帳戶: <?=$data["accountName"]?></h5>
