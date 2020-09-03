@@ -26,5 +26,5 @@ $transaction = new Transaction;
 // echo $transaction->value."<br>";
 // echo $transaction->date."<br>";
 
-echo $transaction->getCountsByAccountId("kim")."<br>";
+var_dump($transaction->getCountsByAccountId("kim"))."<br>";
 var_dump( $transaction->getTransactionsByAccountId("kim",0, 10));

@@ -107,13 +107,14 @@ class DashboardController extends Controller {
                 $this->view("panel/validateForm", $data);
                 break;
             case "transaction":
-                if( isset($_SESSION["validated"]) ) {
-                    $this->view("panel/transactionTable", Array());
-                    unset($_SESSION["validated"]);
-                } else {
-                    header( "HTTP/1.1 404 Not Found" );
-                    exit;
-                }
+                //if( isset($_SESSION["validated"]) ) {
+                    $data["script"] = ["views/script/transactionTable.js"];
+                    $this->view("panel/transactionTable", $data);
+                //     unset($_SESSION["validated"]);
+                // } else {
+                //     header( "HTTP/1.1 404 Not Found" );
+                //     exit;
+                // }
                 break;
             case "changePassword":
                 $data = [];
@@ -262,6 +263,7 @@ class DashboardController extends Controller {
                             $this->view("panel/settingForm", $data);
                             break;
                         case "transaction":
+                            $data["script"] = ["views/script/transactionTable.js"];
                             $this->view("panel/transactionTable", Array());
                             break;
                     }
@@ -289,10 +291,10 @@ class DashboardController extends Controller {
             $result["valueInvalid"] = "is-invalid";
             $result["valueFeedback"] = "此欄位不可留空";
         } else {
-            $pattern = '/^\d{1,18}(\.\d{1,3})?$/';
+            $pattern = '/^\d{1,15}(\.\d{1,3})?$/';
             if( !preg_match( $pattern, $_POST["value"]) ) {
                 $result["valueInvalid"] = "is-invalid";
-                $result["valueFeedback"] = "必須是整數或浮點數，容許小數點後3位";
+                $result["valueFeedback"] = "必須是整數或浮點數，容許小數點前15位，容許小數點後3位";
             }
         }
 

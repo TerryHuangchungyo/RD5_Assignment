@@ -32,16 +32,19 @@ class Transaction extends Model{
         $stmt = $dblink->prepare( "SELECT COUNT($pidName) as transCount  FROM $tbName WHERE accountId= ?" );
         $stmt->execute([$accountId]);
         
-        return $stmt->fetch(PDO::FETCH_ASSOC)["transCount"];
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function getTransactionsByAccountId( $accountId, $offset, $limit ) {
+    public function getTransactionsByAccountId( $accountId, $offsets, $limits ) {
         $dblink = $this->getDatabase();
         $tbName = $this->getTbName();
         $pidName = $this->getPidName();
 
-        $stmt = $dblink->prepare( "SELECT * FROM $tbName WHERE accountId = ? ORDER BY date DESC limit ?, ?");
-        if($stmt->execute(Array($accountId, $offset, $limit))) {
+        $stmt = $dblink->prepare( "SELECT * FROM $tbName WHERE accountId = :accountId ORDER BY date DESC limit :offsets, :limits");
+        $stmt->bindParam( ":accountId", $accountId );
+        $stmt->bindParam( ":offsets", $offsets, PDO::PARAM_INT);
+        $stmt->bindParam( ":limits", $limits, PDO::PARAM_INT);
+        if($stmt->execute()) {
            return $stmt->fetchAll( PDO::FETCH_ASSOC ); 
         } else {
             return [];

@@ -14,12 +14,13 @@ class TransactionController extends Controller {
     }
 
     public function getAPI( $accountId ) {
-        $model = $this->model("Account");
-        $model->load(["accountId", "name", "holder", "balance"],$accountId);
-        $data = [ "accountId" => $model->accountId,
-                "name" => $model->name,
-                "holder" => $model->holder,
-                "balance" => $model->balance ];
-        $this->view("api/JsonAPI", $data);
+        $transaction = $this->model("Transaction");
+        if( (isset($_GET["offsets"]) && isset($_GET["limits"]))) {
+            $data = $transaction->getTransactionsByAccountId($_SESSION["loginToken"], $_GET["offsets"], $_GET["limits"]);
+            $this->view("api/JsonArrAPI", $data);
+        } else {
+            $data = $transaction->getCountsByAccountId($_SESSION["loginToken"]);
+            $this->view("api/JsonAPI", $data);
+        }
     }
 }

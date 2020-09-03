@@ -1,4 +1,4 @@
-<div class="container my-3">
+<div id="transTable" class="container my-3">
     <table class="table table-hover">
         <thead class="thead-light">
             <tr>
@@ -10,7 +10,7 @@
             <th scope="col">交易日期</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="transTableBody">
             <tr>
             <th scope="row">00000000001</th>
             <td><span class="text-success">存款</span></td>
@@ -75,3 +75,39 @@
         </nav>
     </div>
 </div>
+<div id="transDetail" class="container my-3">
+    <div class="container mt-3">
+        <h4 class="text-secondary">交易明細</h4>
+        <div class="container rounded border border-dark">
+            <div class="my-3 ml-2">
+                <h5>交易編號: 24</h5>
+            </div>
+            <div class="my-3 ml-2">
+                <h5>交易日期: 2020-09-03 11:35:40</h5>
+            </div>
+            <div class="my-3 ml-2">
+                <h5>交易類型: <span class="text-danger">提款</span></h5>
+            </div>
+            <div class="my-3 ml-2">
+                <h5>交易狀態: <span class="text-success">成功</span></h5>
+            </div>
+            <div class="my-3 ml-2">
+                <h5>交易帳戶: 核彈總司令</h5>
+            </div>
+            <div class="my-3 ml-2">
+                <h5>交易金額: 2000.000</h5>
+            </div>
+            <div class="my-3 ml-2">
+                <h5>帳戶餘額: 2000.000</h5>
+            </div>
+                </div>
+        <div class="row float-right mr-1 my-3">
+            <button type="button" id="backBtn" data-where="withdraw" class="btn btn-outline-primary">返回</button>
+        </div>
+    </div>
+</div>
+<?php if(isset($data["script"])):?>
+    <?php foreach( $data["script"] as $script ):?>
+        <script src="<?=$script?>"></script>
+    <?php endforeach; ?>
+<?php endif;?>

@@ -36,7 +36,7 @@ $(document).ready(function(){
     
     $("#transaction-tab").click(function(){
         $.ajax({
-            url: "dashboard/panel/validate",
+            url: "dashboard/panel/transaction",
             method: "GET"
         }).then(function( result ){
             lastSeleted.html("");
@@ -66,5 +66,5 @@ $(document).ready(function(){
             lastSeleted = $("#changePassword");
         })
     });
-    $("#accountInfo-tab").trigger("click");
+    $("#transaction-tab").trigger("click");
 });

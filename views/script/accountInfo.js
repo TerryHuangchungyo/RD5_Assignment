@@ -1,7 +1,7 @@
 $(document).ready(function(){
     $("#eyeCloseBtn").hide();
     $("#validateForm").hide();
-    
+
     $("#eyeShowBtn").click(function(){
         $("#validateForm").show();
         $("#info").hide();
@@ -19,6 +19,10 @@ $(document).ready(function(){
     $("#validateCancel").click(function(){
         $("#validateForm").hide();
         $("#info").show();
+        $("#validatePasswordInput").val("");
+        $("#validateCheckPasswordInput").val("");
+        $("#validatePasswordInput").removeClass("is-invalid");
+        $("#validateCheckPasswordInput").removeClass("is-invalid");
     });
 
     $("#validateSubmit").click(function(){

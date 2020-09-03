@@ -46,7 +46,7 @@ INSERT INTO Transactions( accountId, aid, value, residue, success, date ) VALUES
 CREATE TABLE Errors (
     errorId int primary key auto_increment,
     transId int not null,
-    errorMsg varchar(80),
+    errorMsg varchar(150),
     CONSTRAINT fk_Transaction_Id FOREIGN KEY (transId) REFERENCES Transactions(transId) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

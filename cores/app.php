@@ -4,8 +4,8 @@ class APP {
         $route = new Route();
         
         switch( $route->getNextPath() ) {
-            case "account":
-                $controller = new AccountController($route);
+            case "transaction":
+                $controller = new TransactionController($route);
                 break;
             case "dashboard":
                 $controller = new DashboardController($route);
