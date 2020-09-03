@@ -2,11 +2,22 @@ var signupResult;
 var loginResult;
 
 $(document).ready(function(){
+    let rememberId = localStorage.getItem("id");
+    if( rememberId != null ) {
+        $("#accountId").val(rememberId);
+        $("#rememberMe").prop("checked",true)
+    }
+
     $("#loginModal").on( "hide.bs.modal",function() {
         $("#accoutPassword").val("");
     });
 
     $("#loginBtn").click( function(){
+        localStorage.removeItem("id");
+        if( $("#rememberMe").prop("checked")) {
+            localStorage.setItem("id",$("#accountId").val());
+        }
+        
         let dataToServer = { "accountId": $("#accountId").val(),
                         "accountPassword": $("#accountPassword").val()};
 

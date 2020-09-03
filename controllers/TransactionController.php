@@ -3,7 +3,7 @@ class TransactionController extends Controller {
     public function __construct( $route ) {
         switch( $_SERVER["REQUEST_METHOD"] ) {
             case "GET":
-                if( isset( $_SESSION["loginToken"]) ) {
+                if( isset( $_SESSION["loginToken"] ) && isset( $_SESSION["validated"] ) ) {
                     $this->getAPI($_SESSION["loginToken"] ); 
                 } else {
                     header( "HTTP/1.1 404 Not Found" );

@@ -66,5 +66,5 @@ $(document).ready(function(){
             lastSeleted = $("#changePassword");
         })
     });
-    $("#transaction-tab").trigger("click");
+    $("#accountInfo-tab").trigger("click");
 });
