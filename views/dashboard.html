@@ -32,51 +32,45 @@
         <div class="col-9">
           <div class="tab-content" id="v-pills-tabContent">
             <div class="tab-pane fade show active" id="account-info" role="tabpanel" aria-labelledby="account-info-tab">
-                <div class="container mt-3">
-                    <h4 class="pl-2 text-secondary">帳戶資訊</h4>
-                    <div class="card mt-3">
-                        <div class="card-header">
-                            test，您好
+                <div class="container my-3">
+                    <h4 class="text-secondary">帳戶設定</h4>
+                    <div class="row mb-3">
+                        <div class="col-3">
+                            <h5 class="pt-2">帳戶名稱:</h5>
                         </div>
-                        <div class="card-body">
-                        <h5>帳戶名稱: 16888</h5>
-                        <h5>餘額: $1000.000</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-                <div class="container mt-3">
-                    <h4 class="text-secondary">交易明細</h4>
-                    <div class="container rounded border border-dark">
-                        <div class="my-3 ml-2">
-                            <h5>交易編號: 0000000001</h5>
-                        </div>
-                        <div class="my-3 ml-2">
-                            <h5>交易日期: 2020-8-31 12:00:00</h5>
-                        </div>
-                        <div class="my-3 ml-2">
-                            <h5>交易類型: 提款</h5>
-                        </div>
-                        <div class="my-3 ml-2">
-                            <h5>交易狀態: 成功</h5>
-                        </div>
-                        <div class="my-3 ml-2">
-                            <h5>交易帳戶: 核彈總司令</h5>
-                        </div>
-                        <div class="my-3 ml-2">
-                            <h5>交易金額: 1000</h5>
-                        </div>
-                        <div class="my-3 ml-2">
-                            <h5>帳戶餘額: 2000.000</h5>
-                        </div>
-                        <div class="my-3 ml-2">
-                            <h5>失敗原因:</h5>
-                            <p>工程師踢到線阿!!!!</p>
+                        <div class="col-7 form-group">
+                            <input type="password" class="form-control" id="changePasswordInput" placeholder="請輸入帳戶名稱">
+                            <div id="changePasswordFeedback" class="invalid-feedback"></div>
                         </div>
                     </div>
-                    <div class="row float-right mr-1 mt-3">
-                        <button type="button" id="continue"  class="btn btn-outline-primary">繼續操作</button>
+                    <div class="row mb-3">
+                        <div class="col-3">
+                            <h5 class="pt-2">帳戶擁有人姓名:</h5>
+                        </div>
+                        <div class="col-7 form-group">
+                            <input type="password" class="form-control" id="changeCheckPasswordInput" placeholder="請輸入帳戶擁有人名稱">
+                            <div id="changeCheckPasswordFeedback" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-3">
+                            <h5>帳戶餘額屏蔽:</h5>
+                        </div>
+                        <div class="col-7 form-group">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="hindRadioBtn" id= "inlineCheckbox1" value="true" checked>
+                                <label class="form-check-label" for="inlineCheckbox1">是</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="hindRadioBtn" id="inlineCheckbox2" value="false">
+                                <label class="form-check-label" for="inlineCheckbox2">否</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="offset-8 col-2">
+                            <button type="button" id="changeSubmit" class="float-right btn btn-success">提交</button>
+                        </div>
                     </div>
                 </div>
             </div>

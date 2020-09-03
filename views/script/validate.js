@@ -7,7 +7,6 @@ $("#validateSubmit").click(function(){
         "panel" : ($("a.nav-link.active").prop("id")).slice(0 , -4)
     };
 
-    console.log(dataToServer);
     $.ajax({
         type: "post",
         url: "dashboard/validate",

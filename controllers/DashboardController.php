@@ -21,10 +21,6 @@ class DashboardController extends Controller {
                 }
                 $this->panel( $route->getParam()[0] );
                 break;
-            case "deposit":
-                break;
-            case "withdraw":
-                break;
             case "validate":
                 $this->validate();
                 break;
@@ -42,6 +38,13 @@ class DashboardController extends Controller {
                     exit;
                 }
                 $this->action();
+                break;
+            case "setting":
+                if( !isset($_SESSION["loginToken"]) || $route->hasNextPath() || !isset($_SESSION["validated"]) ) {
+                    header( "HTTP/1.1 404 Not Found" );
+                    exit;
+                }
+                $this->setting();
                 break;
             case null:
                 if( !isset($_SESSION["loginToken"])) {
@@ -73,6 +76,9 @@ class DashboardController extends Controller {
     }
 
     public function panel( $panelName ) {
+        if( isset($_SESSION["validated"]) ) {
+            unset($_SESSION["validated"]);
+        }
         switch( $panelName ) {
             case "info":
                 $model = $this->model("Account");
@@ -112,6 +118,9 @@ class DashboardController extends Controller {
                 $data["script"] = ["views/script/changePassword.js"];
                 $this->view("panel/changePasswordForm", $data);
                 break;
+            default:
+                header( "HTTP/1.1 404 Not Found" );
+                exit;
         }
     }
 
@@ -206,10 +215,16 @@ class DashboardController extends Controller {
             $success = $account->load(["password"], $_SESSION["loginToken"]);
             if( $success ) {
                 if( hash( "sha256",$_POST["validateCheckPassword"]) == $account->password ) {   
-                
+                    $_SESSION["validated"] = true;
                     switch( $_POST["panel"] ) {
                         case "setting":
-                            $this->view("panel/settingForm", Array());
+                            $model = $this->model("Account");
+                            $model->load(["name", "holder", "balanceHide"],$_SESSION["loginToken"]);
+                            $data = [ "accountName" => $model->name,
+                                    "accountHolder" => $model->holder,
+                                    "balanceHide" => $model->balanceHide ];
+                            $data["script"] = ["views/script/settingForm.js"];
+                            $this->view("panel/settingForm", $data);
                             break;
                         case "transaction":
                             $this->view("panel/transactionTable", Array());
@@ -347,6 +362,51 @@ class DashboardController extends Controller {
 
             $result["script"] = ["views/script/action.js"];
             $this->view("panel/actionForm", $result);   
+        }
+    }
+
+    public function setting() {
+        $result = [];
+
+
+        if( $_POST["accountName"] == "") {
+            $result["accountNameInvalid"] = "is-invalid";
+            $result["accountNameFeedback"] = "此欄位不可留空";
+        }
+
+        if( $_POST["accountHolder"] == "") {
+            $result["accountHolderInvalid"] = "is-invalid";
+            $result["accountHolderFeedback"] = "此欄位不可留空";
+        }
+
+        if( count($result) == 0 ) { 
+            $account = $this->model("Account");
+            $account->load(["name", "holder", "balanceHide"], $_SESSION["loginToken"]);
+            $account->name = $_POST["accountName"];
+            $account->holder = $_POST["accountHolder"];
+            $account->balanceHide = $_POST["balanceHide"];
+
+            $success = $account->save(["name", "holder", "balanceHide"], $_SESSION["loginToken"]);
+            if( $success ) {
+                $result["what"] = "帳戶設定";
+                $result["where"] = "setting";
+                $result["success"] = "成功";
+                $result["script"] = ["views/script/continue.js"];
+                $this->view("panel/changeResult", $result);
+            } else {
+                $result["what"] = "帳戶設定";
+                $result["where"] = "setting";
+                $result["success"] = "失敗";
+                $result["msg"] = ["系統發生錯誤"];
+                $result["script"] = ["views/script/continue.js"];
+                $this->view("panel/changeResult", $result);
+            }
+        } else {
+            $result["accountName"] = $_POST["accountName"];
+            $result["accountHolder"] = $_POST["accountHolder"];
+            $result["balanceHide"] = $_POST["balanceHide"];
+            $result["script"] = ["views/script/settingForm.js"];
+            $this->view("panel/settingForm", $result);
         }
     }
 }
