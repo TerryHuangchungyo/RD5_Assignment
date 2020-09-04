@@ -5,7 +5,8 @@ $(document).ready(function(){
     let rememberId = localStorage.getItem("id");
     if( rememberId != null ) {
         $("#accountId").val(rememberId);
-        $("#rememberMe").prop("checked",true)
+        $("#rememberMe").prop("checked",true);
+        localStorage.removeItem("id");
     }
 
     $("#loginModal").on( "hide.bs.modal",function() {
@@ -13,7 +14,6 @@ $(document).ready(function(){
     });
 
     $("#loginBtn").click( function(){
-        localStorage.removeItem("id");
         if( $("#rememberMe").prop("checked")) {
             localStorage.setItem("id",$("#accountId").val());
         }

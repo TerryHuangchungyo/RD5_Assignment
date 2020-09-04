@@ -47,7 +47,7 @@ function setPages( pages ) {
         clickCurrentPage: true,
     
         // called when a page is changed.
-        pageChange: function(page) { getTransactionData( updateTableUI, 10*(page-1),10*page ); }
+        pageChange: function(page) { getTransactionData( updateTableUI, 10*(page-1),10 ); }
     
     });
 }

@@ -117,8 +117,8 @@ class Account {
                         $balance += $value;
                         break;
                     case 2:
-                        if( $value < $balance ) {
-                            $balance -= $value;
+                        if( round($value,3) <= round($balance,3) ) {
+                            $balance = round($balance,3) - round($value,3);
                         } else {
                             throw new Exception("餘額不足");
                         }
